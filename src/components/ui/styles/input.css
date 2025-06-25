@@ -1,0 +1,138 @@
+/* Input Styles - 100% Vanilla CSS */
+.input-group {
+  margin-bottom: 16px;
+}
+
+.input-label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 500;
+  color: #374151;
+  font-size: 14px;
+}
+
+.input-label.required::after {
+  content: "*";
+  color: #ef4444;
+  margin-left: 4px;
+}
+
+.input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-wrapper.error .input-field {
+  border-color: #ef4444;
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+}
+
+.input-wrapper.disabled {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.input-field {
+  width: 100%;
+  padding: 12px 16px;
+  border: 2px solid #e5e7eb;
+  border-radius: 8px;
+  font-size: 14px;
+  background-color: white;
+  color: #374151;
+  transition: all 0.2s ease;
+  font-family: inherit;
+}
+
+.input-field:focus {
+  outline: none;
+  border-color: #7c3aed;
+  box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.1);
+}
+
+.input-field::placeholder {
+  color: #9ca3af;
+}
+
+.input-field:disabled {
+  background-color: #f9fafb;
+  color: #6b7280;
+  cursor: not-allowed;
+}
+
+/* Input with Icons */
+.input-field.has-icon-left {
+  padding-left: 44px;
+}
+
+.input-field.has-icon-right {
+  padding-right: 44px;
+}
+
+.input-icon {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #9ca3af;
+  pointer-events: none;
+  font-size: 16px;
+}
+
+.input-icon-left {
+  left: 12px;
+}
+
+.input-icon-right {
+  right: 12px;
+}
+
+.password-toggle {
+  pointer-events: auto;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+  transition: color 0.2s ease;
+}
+
+.password-toggle:hover {
+  color: #6b7280;
+}
+
+.eye-icon {
+  font-size: 18px;
+}
+
+.input-error {
+  display: block;
+  margin-top: 4px;
+  font-size: 12px;
+  color: #ef4444;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .input-field {
+    padding: 10px 14px;
+    font-size: 13px;
+  }
+
+  .input-field.has-icon-left {
+    padding-left: 40px;
+  }
+
+  .input-field.has-icon-right {
+    padding-right: 40px;
+  }
+
+  .input-icon-left {
+    left: 10px;
+  }
+
+  .input-icon-right {
+    right: 10px;
+  }
+}

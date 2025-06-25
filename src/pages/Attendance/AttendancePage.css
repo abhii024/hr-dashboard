@@ -1,0 +1,356 @@
+/* Attendance Page Styles - 100% Vanilla CSS */
+.attendance-page {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0;
+}
+
+.page-header {
+  margin-bottom: 24px;
+}
+
+.page-title {
+  font-size: 28px;
+  font-weight: 700;
+  color: #111827;
+  margin: 0;
+}
+
+.attendance-content {
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+/* Filters Section */
+.filters-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24px;
+  border-bottom: 1px solid #e5e7eb;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.filter-group {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.filter-select {
+  padding: 10px 16px;
+  border: 2px solid #e5e7eb;
+  border-radius: 8px;
+  font-size: 14px;
+  background-color: white;
+  cursor: pointer;
+  min-width: 120px;
+  font-family: inherit;
+}
+
+.filter-select:focus {
+  outline: none;
+  border-color: #7c3aed;
+}
+
+.search-group {
+  display: flex;
+  align-items: center;
+}
+
+.search-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.search-input {
+  padding: 10px 16px 10px 40px;
+  border: 2px solid #e5e7eb;
+  border-radius: 8px;
+  font-size: 14px;
+  width: 300px;
+  max-width: 100%;
+  font-family: inherit;
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: #7c3aed;
+}
+
+.search-icon {
+  position: absolute;
+  left: 12px;
+  color: #6b7280;
+  font-size: 16px;
+  pointer-events: none;
+}
+
+/* Table Section */
+.table-section {
+  overflow-x: auto;
+}
+
+/* Profile Cell */
+.profile-cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.employee-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+/* Task Cell */
+.task-cell {
+  max-width: 300px;
+}
+
+.task-text {
+  display: block;
+  white-space: normal;
+  word-wrap: break-word;
+  line-height: 1.4;
+}
+
+/* Status Cell with Dropdown */
+.status-cell {
+  position: relative;
+}
+
+.status-dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.status-badge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  transition: all 0.2s ease;
+}
+
+.status-badge:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.dropdown-arrow {
+  font-size: 10px;
+  transition: transform 0.2s ease;
+}
+
+.status-dropdown:hover .dropdown-arrow {
+  transform: rotate(180deg);
+}
+
+.status-dropdown-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+  min-width: 120px;
+  padding: 4px 0;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-10px);
+  transition: all 0.2s ease;
+}
+
+.status-dropdown:hover .status-dropdown-menu {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.status-option {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 8px 12px;
+  background: none;
+  border: none;
+  text-align: left;
+  font-size: 12px;
+  color: #374151;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.status-option:hover {
+  background-color: #f3f4f6;
+}
+
+.status-option.active {
+  background-color: #f0f9ff;
+  color: #0369a1;
+}
+
+.status-indicator {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.status-indicator.present {
+  background-color: #10b981;
+}
+
+.status-indicator.absent {
+  background-color: #ef4444;
+}
+
+/* Edit Attendance Modal */
+.edit-attendance-modal .modal {
+  max-width: 500px;
+}
+
+.edit-attendance-modal .modal-header {
+  background: linear-gradient(135deg, #7c3aed 0%, #a855f7 100%);
+  color: white;
+  border-radius: 12px 12px 0 0;
+}
+
+.edit-attendance-modal .modal-title {
+  color: white;
+}
+
+.edit-attendance-modal .modal-close-btn .close-icon {
+  color: white;
+}
+
+.modal-form {
+  padding: 0;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+/* Custom Select Styling */
+.select-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.form-select {
+  width: 100%;
+  padding: 12px 40px 12px 16px;
+  border: 2px solid #e5e7eb;
+  border-radius: 8px;
+  font-size: 14px;
+  background-color: white;
+  color: #374151;
+  cursor: pointer;
+  appearance: none;
+  font-family: inherit;
+}
+
+.form-select:focus {
+  outline: none;
+  border-color: #7c3aed;
+  box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.1);
+}
+
+.select-arrow {
+  position: absolute;
+  right: 12px;
+  color: #6b7280;
+  pointer-events: none;
+  font-size: 12px;
+}
+
+.input-label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 500;
+  color: #374151;
+  font-size: 14px;
+}
+
+.input-label.required::after {
+  content: "*";
+  color: #ef4444;
+  margin-left: 4px;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .filters-section {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .search-group {
+    justify-content: stretch;
+  }
+
+  .search-input {
+    width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  .edit-attendance-modal .modal {
+    width: 95%;
+    margin: 20px;
+  }
+
+  .filters-section {
+    padding: 16px;
+  }
+
+  .filter-group {
+    width: 100%;
+  }
+
+  .filter-select {
+    width: 100%;
+  }
+
+  .task-cell {
+    max-width: 200px;
+  }
+
+  .status-dropdown-menu {
+    left: auto;
+    right: 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .search-input {
+    width: 100%;
+    min-width: 200px;
+  }
+
+  .task-cell {
+    max-width: 150px;
+  }
+
+  .task-text {
+    font-size: 12px;
+  }
+}
