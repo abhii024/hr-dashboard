@@ -4,6 +4,7 @@
   min-height: 100vh;
   background-color: #ffffff;
   position: relative;
+  overflow: visible;
 }
 
 .sidebar-wrapper {

@@ -3,7 +3,7 @@ import dotenv from "dotenv";
 import cors from "cors";
 import connectDB from "./config/db.js";
 import userRoutes from "./routes/userRoutes.js";
-
+import path from "path";
 dotenv.config();
 
 const app = express();
@@ -17,6 +17,7 @@ const corsOptions = {
 };
 app.use(cors(corsOptions));
 app.use(express.json());
+app.use("/uploads/resumes", express.static(path.join("uploads/resumes"))); // serve files
 
 // Routes
 app.use("/api", userRoutes);

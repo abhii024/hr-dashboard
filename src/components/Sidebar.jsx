@@ -35,7 +35,7 @@ const Sidebar = ({ onLogout }) => {
         </button>
 
         {/* Search */}
-        <div className="sidebar-search">
+        {/* <div className="sidebar-search">
           <div className="search-container">
             <svg className="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none">
               <path
@@ -48,7 +48,20 @@ const Sidebar = ({ onLogout }) => {
             </svg>
             <input type="text" placeholder="Search" className="search-input" />
           </div>
-        </div>
+        </div> */}
+
+          <div className="search-group">
+            <div className="search-input-wrapper">
+              <span className="search-icon">🔍</span>
+              <input
+                type="text"
+                placeholder="Search"
+                // value={searchTerm}
+                // onChange={(e) => setSearchTerm(e.target.value)}
+                className="search-input"
+              />
+            </div>
+          </div>
 
         {/* Navigation */}
         <nav className="sidebar-nav">

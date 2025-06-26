@@ -1,72 +1,20 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "./Candidates.css";
 import Table from "../../components/ui/Table";
 import Badge from "../../components/ui/Badge";
 import Modal from "../../components/ui/Modal";
 import Input from "../../components/ui/Input";
 import Button from "../../components/ui/Button";
+import Api from "../../api.js";
+import Header from "../../components/ui/Header.jsx";
 const Candidates = () => {
-  const [searchTerm, setSearchTerm] = useState("");
-  const [statusFilter, setStatusFilter] = useState("");
-  const [positionFilter, setPositionFilter] = useState("");
-  const [showAddModal, setShowAddModal] = useState(false);
-  const [candidates, setCandidates] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
-  const candidatesData = [
-    {
-      id: 1,
-      srNo: "01",
-      name: "Jane Cooper",
-      email: "jane.cooper@example.com",
-      phone: "(704) 555-0127",
-      position: "Designer Intern",
-      status: "new",
-      experience: "0",
-    },
-    {
-      id: 2,
-      srNo: "02",
-      name: "Janney Wilson",
-      email: "janney.wilson@example.com",
-      phone: "(252) 555-0126",
-      position: "Senior Developer",
-      status: "new",
-      experience: "1+",
-    },
-    {
-      id: 3,
-      srNo: "03",
-      name: "Guy Hawkins",
-      email: "kenzi.lawson@example.com",
-      phone: "(907) 555-0101",
-      position: "Human Resource I...",
-      status: "new",
-      experience: "10+",
-    },
-    {
-      id: 4,
-      srNo: "04",
-      name: "Arlene McCoy",
-      email: "arlene.mccoy@example.com",
-      phone: "(302) 555-0107",
-      position: "Full Time Designer",
-      status: "selected",
-      experience: "5+",
-    },
-    {
-      id: 5,
-      srNo: "05",
-      name: "Leslie Alexander",
-      email: "willie.jennings@example.com",
-      phone: "(207) 555-0119",
-      position: "Full Time Developer",
-      status: "rejected",
-      experience: "0",
-    },
-  ];
-
+  const [candidatesData, setCandidatesData] = useState([]);
+  const [finalDate, setFinalDate] = useState([]);
+  const positions = ["Human Resource", "Designer", "Developer"];
+  const statuses = ["New", "Scheduled", "Ongoing", "Selected", "Rejected"];
   // Table columns
   const columns = [
     { key: "srNo", header: "Sr no." },
@@ -96,22 +44,18 @@ const Candidates = () => {
       label: "Download Resume",
       icon: "📄",
       onClick: (row) => {
-        alert(`Downloading resume for ${row.name}`);
-      },
-    },
-    {
-      label: "Move to Employee",
-      icon: "👤",
-      onClick: (row) => {
-        alert(`Moving ${row.name} to employees`);
-      },
-      disabled: (row) => row.status === "rejected",
-    },
-    {
-      label: "Edit Candidate",
-      icon: "✏️",
-      onClick: (row) => {
-        alert(`Editing ${row.name}`);
+        if (!row.resume) {
+          alert("No resume available for this candidate.");
+          return;
+        }
+
+        const link = document.createElement("a");
+        link.href = `http://localhost:8000/uploads/resumes/${row.resume}`;
+        link.download = row.resume; // trigger download with original filename
+        link.target = "_blank";
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
       },
     },
     {
@@ -120,85 +64,216 @@ const Candidates = () => {
       onClick: (row) => {
         if (window.confirm(`Are you sure you want to delete ${row.name}?`)) {
           alert(`Deleted ${row.name}`);
+          // Optionally: call DELETE API here
         }
       },
       className: "danger",
     },
   ];
 
-  const handleAddCandidate = (candidateData) => {
-    const newCandidate = {
-      id: candidates.length + 1,
-      ...candidateData,
-      status: "new",
-    };
-    setCandidates([...candidates, newCandidate]);
-    setShowAddModal(false);
+  const [formData, setFormData] = useState({
+    fullName: "",
+    email: "",
+    phone: "",
+    position: "",
+    experience: "",
+    resume: null, // file object
+  });
+
+  const [errors, setErrors] = useState({});
+
+  const handleChange = (e) => {
+    const { name, value, files } = e.target;
+
+    if (name === "resume") {
+      setFormData((prev) => ({ ...prev, resume: files[0] }));
+    } else {
+      setFormData((prev) => ({ ...prev, [name]: value }));
+    }
+
+    setErrors((prev) => ({ ...prev, [name]: "" }));
   };
+
+  const validate = () => {
+    const newErrors = {};
+    if (!formData.fullName.trim()) newErrors.fullName = "Full name is required";
+    if (!formData.email.trim()) {
+      newErrors.email = "Email is required";
+    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+      newErrors.email = "Invalid email";
+    }
+    if (!formData.phone.trim()) newErrors.phone = "Phone number is required";
+    if (!formData.position.trim()) newErrors.position = "Position is required";
+    if (!formData.experience.trim())
+      newErrors.experience = "Experience is required";
+    if (!formData.resume) newErrors.resume = "Resume file is required";
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!validate()) return;
+
+    // Here you can use FormData to send file via API
+    const data = new FormData();
+    data.append("fullName", formData.fullName);
+    data.append("email", formData.email);
+    data.append("phone", formData.phone);
+    data.append("position", formData.position);
+    data.append("experience", formData.experience);
+    data.append("resume", formData.resume);
+
+    try {
+      const res = Api.post("/candidates", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+      setModalOpen(false);
+      setFormData({
+        fullName: "",
+        email: "",
+        phone: "",
+        position: "",
+        experience: "",
+        resume: null,
+        message: res.data.message || "Candidate created!",
+      });
+
+      setModalOpen(false);
+    } catch (err) {
+      console.log(err.response?.data?.message || "Upload failed");
+    }
+  };
+
+  useEffect(() => {
+    const formatted = candidatesData.map((item, index) => ({
+      _id: item._id,
+      srNo: (index + 1).toString().padStart(2, "0"),
+      name: item.fullName,
+      email: item.email,
+      phone: item.phone,
+      position: item.position,
+      status: item.status.toLowerCase(),
+      experience: item.experience,
+      resume: item.resume,
+    }));
+    setFinalDate(formatted);
+  }, [candidatesData]);
 
   return (
     <div className="candidates-page">
       <div className="content-container">
-        <div className="filters-section">
-          <div className="filter-group">
-            <select
-              value={statusFilter}
-              onChange={(e) => setStatusFilter(e.target.value)}
-              className="filter-select"
-            >
-              <option value="">Status</option>
-              <option value="present">Present</option>
-              <option value="absent">Absent</option>
-            </select>
-          </div>
-
-          <div className="search-add-group">
-            <div className="search-input-wrapper">
-              <input
-                type="text"
-                placeholder="Search"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="search-input"
-              />
-              <span className="search-icon">🔍</span>
-            </div>
-            <button
-              className="btn btn-primary"
-              onClick={() => setShowAddModal(true)}
-            >
-              Add Candidate
-            </button>
-          </div>
-        </div>
-        <Table columns={columns} data={candidatesData} actions={actions} />
-      </div>
-
-      {/* {showAddModal && (
-        <AddCandidateModal
-          onClose={() => setShowAddModal(false)}
-          onAdd={handleAddCandidate}
+        <Header
+          setCandidatesData={setCandidatesData}
+          setModalOpen={setModalOpen}
+          positions={positions}
+          statuses= {statuses}
         />
-      )} */}
+        <Table columns={columns} data={finalDate} actions={actions} />
+      </div>
 
       <Modal
         isOpen={modalOpen}
         onClose={() => setModalOpen(false)}
-        title="Example Modal"
-        size="medium"
+        title="Add New Candidate"
+        size="large"
+        className="edit-employee-modal"
       >
-        <p>This is an example modal content. You can put any content here.</p>
-        <Input label="Name" placeholder="Enter name" />
-        <Input label="Email" type="email" placeholder="Enter email" />
+        <form className="modal-form" onSubmit={handleSubmit}>
+          <div className="form-row">
+            <Input
+              label="Full Name"
+              name="fullName"
+              placeholder="Enter full name"
+              value={formData.fullName}
+              onChange={handleChange}
+              required
+              error={errors.fullName}
+            />
+            <Input
+              label="Email Address"
+              name="email"
+              type="email"
+              placeholder="Enter email address"
+              value={formData.email}
+              onChange={handleChange}
+              required
+              error={errors.email}
+            />
+          </div>
 
-        <Modal.Footer>
-          <Button variant="secondary" onClick={() => setModalOpen(false)}>
-            Cancel
-          </Button>
-          <Button variant="primary" onClick={() => setModalOpen(false)}>
-            Save
-          </Button>
-        </Modal.Footer>
+          <div className="form-row">
+            <Input
+              label="Phone Number"
+              name="phone"
+              placeholder="Enter phone number"
+              value={formData.phone}
+              onChange={handleChange}
+              required
+              error={errors.phone}
+            />
+            <div className="input-group">
+              <label className="input-label required">Position</label>
+              <div className="select-wrapper">
+                <select
+                  name="position"
+                  className="form-select"
+                  value={formData.position}
+                  onChange={handleChange}
+                  required
+                >
+                  <option value="">Select Position</option>
+                  <option value="Human Resource">Human Resource</option>
+                  <option value="Designer">Designer</option>
+                  <option value="Developer">Developer</option>
+                </select>
+                <span className="select-arrow">▼</span>
+              </div>
+              {errors.position && <p className="error">{errors.position}</p>}
+            </div>
+          </div>
+
+          <div className="form-row">
+            <Input
+              label="Experience"
+              name="experience"
+              placeholder="Enter experience (e.g. 2 years)"
+              value={formData.experience}
+              onChange={handleChange}
+              required
+              error={errors.experience}
+            />
+            <div className="custom-file-upload">
+              <label htmlFor="resume" className="upload-label">
+                Resume<span className="required-star">*</span>
+              </label>
+
+              <div className="upload-box">
+                <input
+                  type="file"
+                  id="resume"
+                  name="resume"
+                  onChange={handleChange}
+                  className="upload-input"
+                  accept=".pdf,.doc,.docx"
+                />
+                <span className="file-name">
+                  {formData.resume ? formData.resume.name : "Choose a file..."}
+                </span>
+                <span className="upload-icon">📤</span> {/* or use SVG */}
+              </div>
+
+              {errors.resume && <p className="error">{errors.resume}</p>}
+            </div>
+          </div>
+
+          <Modal.Footer>
+            <Button type="submit" variant="primary">
+              Save
+            </Button>
+          </Modal.Footer>
+        </form>
       </Modal>
     </div>
   );

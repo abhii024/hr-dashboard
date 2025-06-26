@@ -8,7 +8,8 @@
   left: 0;
   top: 0;
   z-index: 1000;
-  overflow-y: auto;
+  /* overflow-y: auto; */
+
 }
 
 .sidebar-content {
@@ -101,7 +102,7 @@
   transition: all 0.2s ease;
   border: none;
   background: none;
-  width: 100%;
+  /* width: 100%; */
   cursor: pointer;
   text-align: left;
 }

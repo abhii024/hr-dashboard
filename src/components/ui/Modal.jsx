@@ -1,7 +1,7 @@
-"use client"
+"use client";
 
-import { useEffect } from "react"
-import "./styles/modal.css"
+import { useEffect } from "react";
+import "./styles/modal.css";
 
 const Modal = ({
   isOpen,
@@ -15,32 +15,39 @@ const Modal = ({
 }) => {
   useEffect(() => {
     if (isOpen) {
-      document.body.style.overflow = "hidden"
+      document.body.style.overflow = "hidden";
     } else {
-      document.body.style.overflow = "unset"
+      document.body.style.overflow = "unset";
     }
 
     return () => {
-      document.body.style.overflow = "unset"
-    }
-  }, [isOpen])
+      document.body.style.overflow = "unset";
+    };
+  }, [isOpen]);
 
   useEffect(() => {
     const handleEscape = (e) => {
       if (e.key === "Escape" && isOpen) {
-        onClose()
+        onClose();
       }
-    }
+    };
 
-    document.addEventListener("keydown", handleEscape)
-    return () => document.removeEventListener("keydown", handleEscape)
-  }, [isOpen, onClose])
+    document.addEventListener("keydown", handleEscape);
+    return () => document.removeEventListener("keydown", handleEscape);
+  }, [isOpen, onClose]);
 
-  if (!isOpen) return null
+  if (!isOpen) return null;
 
   return (
-    <div className="modal-overlay" onClick={closeOnOverlay ? onClose : undefined}>
-      <div className={`modal modal-${size} ${className}`} onClick={(e) => e.stopPropagation()}>
+    <div
+      className="modal-overlay"
+      onClick={closeOnOverlay ? onClose : undefined}
+      style={{ position: "fixed", zIndex: 9999 }}
+    >
+      <div
+        className={`modal modal-${size} ${className}`}
+        onClick={(e) => e.stopPropagation()}
+      >
         {(title || showCloseButton) && (
           <div className="modal-header">
             {title && <h2 className="modal-title">{title}</h2>}
@@ -55,13 +62,13 @@ const Modal = ({
         <div className="modal-content">{children}</div>
       </div>
     </div>
-  )
-}
+  );
+};
 
 const ModalFooter = ({ children, className = "" }) => {
-  return <div className={`modal-footer ${className}`}>{children}</div>
-}
+  return <div className={`modal-footer ${className}`}>{children}</div>;
+};
 
-Modal.Footer = ModalFooter
+Modal.Footer = ModalFooter;
 
-export default Modal
+export default Modal;
