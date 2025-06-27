@@ -1,16 +1,15 @@
-"use client"
-
-import { Link, useLocation } from "react-router-dom"
-import "./styles/sidebar.css"
+"use client";
+import React, { useState } from "react";
+import { Link, useLocation } from "react-router-dom";
+import "./styles/sidebar.css";
 
 const Sidebar = ({ onLogout }) => {
-  const location = useLocation()
-
+  const location = useLocation();
+  const [showLogoutPopup, setShowLogoutPopup] = useState(false);
   const handleLogout = () => {
-    if (window.confirm("Are you sure you want to logout?")) {
-      onLogout()
-    }
-  }
+    localStorage.removeItem("token");
+    window.location.href = "/login";
+  };
 
   return (
     <aside className="sidebar">
@@ -22,7 +21,10 @@ const Sidebar = ({ onLogout }) => {
         </div>
 
         {/* Close Button for Mobile */}
-        <button className="sidebar-close-btn" onClick={() => window.dispatchEvent(new CustomEvent("closeSidebar"))}>
+        <button
+          className="sidebar-close-btn"
+          onClick={() => window.dispatchEvent(new CustomEvent("closeSidebar"))}
+        >
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
             <path
               d="M18 6L6 18M6 6L18 18"
@@ -50,18 +52,18 @@ const Sidebar = ({ onLogout }) => {
           </div>
         </div> */}
 
-          <div className="search-group">
-            <div className="search-input-wrapper">
-              <span className="search-icon">🔍</span>
-              <input
-                type="text"
-                placeholder="Search"
-                // value={searchTerm}
-                // onChange={(e) => setSearchTerm(e.target.value)}
-                className="search-input"
-              />
-            </div>
+        <div className="search-group">
+          <div className="search-input-wrapper">
+            <span className="search-icon">🔍</span>
+            <input
+              type="text"
+              placeholder="Search"
+              // value={searchTerm}
+              // onChange={(e) => setSearchTerm(e.target.value)}
+              className="search-input"
+            />
           </div>
+        </div>
 
         {/* Navigation */}
         <nav className="sidebar-nav">
@@ -70,8 +72,19 @@ const Sidebar = ({ onLogout }) => {
             <h3 className="nav-section-title">Recruitment</h3>
             <ul className="nav-list">
               <li className="nav-item">
-                <Link to="/candidates" className={`nav-link ${location.pathname === "/candidates" ? "active" : ""}`}>
-                  <svg className="nav-icon" width="20" height="20" viewBox="0 0 24 24" fill="none">
+                <Link
+                  to="/candidates"
+                  className={`nav-link ${
+                    location.pathname === "/candidates" ? "active" : ""
+                  }`}
+                >
+                  <svg
+                    className="nav-icon"
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                  >
                     <path
                       d="M17 21V19C17 17.9391 16.5786 16.9217 15.8284 16.1716C15.0783 15.4214 14.0609 15 13 15H5C3.93913 15 2.92172 15.4214 2.17157 16.1716C1.42143 16.9217 1 17.9391 1 19V21"
                       stroke="currentColor"
@@ -112,8 +125,19 @@ const Sidebar = ({ onLogout }) => {
             <h3 className="nav-section-title">Organization</h3>
             <ul className="nav-list">
               <li className="nav-item">
-                <Link to="/employees" className={`nav-link ${location.pathname === "/employees" ? "active" : ""}`}>
-                  <svg className="nav-icon" width="20" height="20" viewBox="0 0 24 24" fill="none">
+                <Link
+                  to="/employees"
+                  className={`nav-link ${
+                    location.pathname === "/employees" ? "active" : ""
+                  }`}
+                >
+                  <svg
+                    className="nav-icon"
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                  >
                     <path
                       d="M20 21V19C20 17.9391 19.5786 16.9217 18.8284 16.1716C18.0783 15.4214 17.0609 15 16 15H8C6.93913 15 5.92172 15.4214 5.17157 16.1716C4.42143 16.9217 4 17.9391 4 19V21"
                       stroke="currentColor"
@@ -133,8 +157,19 @@ const Sidebar = ({ onLogout }) => {
                 </Link>
               </li>
               <li className="nav-item">
-                <Link to="/attendance" className={`nav-link ${location.pathname === "/attendance" ? "active" : ""}`}>
-                  <svg className="nav-icon" width="20" height="20" viewBox="0 0 24 24" fill="none">
+                <Link
+                  to="/attendance"
+                  className={`nav-link ${
+                    location.pathname === "/attendance" ? "active" : ""
+                  }`}
+                >
+                  <svg
+                    className="nav-icon"
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                  >
                     <path
                       d="M9 12L11 14L15 10M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z"
                       stroke="currentColor"
@@ -154,8 +189,19 @@ const Sidebar = ({ onLogout }) => {
             <h3 className="nav-section-title">Others</h3>
             <ul className="nav-list">
               <li className="nav-item">
-                <Link to="/leaves" className={`nav-link ${location.pathname === "/leaves" ? "active" : ""}`}>
-                  <svg className="nav-icon" width="20" height="20" viewBox="0 0 24 24" fill="none">
+                <Link
+                  to="/leaves"
+                  className={`nav-link ${
+                    location.pathname === "/leaves" ? "active" : ""
+                  }`}
+                >
+                  <svg
+                    className="nav-icon"
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                  >
                     <path
                       d="M12 2L13.09 8.26L22 9L13.09 9.74L12 16L10.91 9.74L2 9L10.91 8.26L12 2Z"
                       stroke="currentColor"
@@ -168,8 +214,18 @@ const Sidebar = ({ onLogout }) => {
                 </Link>
               </li>
               <li className="nav-item">
-                <button onClick={handleLogout} className="nav-link logout-btn">
-                  <svg className="nav-icon" width="20" height="20" viewBox="0 0 24 24" fill="none">
+                <button
+                  onClick={() => setShowLogoutPopup(true)}
+                  className="nav-link logout-btn"
+                  style={{ width: "100%" }}
+                >
+                  <svg
+                    className="nav-icon"
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                  >
                     <path
                       d="M9 21H5C4.46957 21 3.96086 20.7893 3.58579 20.4142C3.21071 20.0391 3 19.5304 3 19V5C3 4.46957 3.21071 3.96086 3.58579 3.58579C3.96086 3.21071 4.46957 3 5 3H9"
                       stroke="currentColor"
@@ -198,9 +254,30 @@ const Sidebar = ({ onLogout }) => {
             </ul>
           </div>
         </nav>
+        {showLogoutPopup && (
+          <div className="modal-overlay">
+            <div className="logout-modal">
+              <div className="modal-header">Log Out</div>
+              <div className="modal-body">
+                <p>Are you sure you want to log out?</p>
+                <div className="modal-buttons">
+                  <button
+                    className="cancel-btn"
+                    onClick={() => setShowLogoutPopup(false)}
+                  >
+                    Cancel
+                  </button>
+                  <button className="modal-logout-btn" onClick={handleLogout}>
+                    Logout
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </aside>
-  )
-}
+  );
+};
 
-export default Sidebar
+export default Sidebar;

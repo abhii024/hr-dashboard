@@ -14,20 +14,13 @@ const LeavesPage = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("");
   const [addLeaveModalOpen, setAddLeaveModalOpen] = useState(false);
-  const [showEmployeeDropdown, setShowEmployeeDropdown] = useState(false);
-  const [selectedEmployee, setSelectedEmployee] = useState(null);
+
   const [currentDate, setCurrentDate] = useState(new Date());
   const [errors, setErrors] = useState({});
   const [employeeSearchTerm, setEmployeeSearchTerm] = useState("");
   const [filteredEmployees, setFilteredEmployees] = useState([]);
   const [showDropdown, setShowDropdown] = useState(false);
   const [employees, setEmployees] = useState([]);
-  // const employees = [
-  //   { _id: "emp1", name: "Jane Cooper" },
-  //   { _id: "emp2", name: "Janney Wilson" },
-  //   { _id: "emp3", name: "Jacob Lee" },
-  //   { _id: "emp4", name: "Jasmine Stone" },
-  // ];
 
   const [formData, setFormData] = useState({
     employeeName: "",
@@ -93,52 +86,6 @@ const LeavesPage = () => {
       console.error("Error fetching leave data:", err);
     }
   }, [statusFilter]);
-  // Mock leaves data
-  useEffect(() => {
-    const mockLeavesData = [
-      {
-        id: 1,
-        employeeName: "Cody Fisher",
-        designation: "Senior Backend Developer",
-        date: "8/09/24",
-        reason: "Visiting House",
-        status: "approved",
-        documents: "medical-certificate.pdf",
-        avatar: "/placeholder.svg?height=40&width=40",
-        startDate: "2024-09-08",
-        endDate: "2024-09-08",
-        days: 1,
-      },
-      {
-        id: 2,
-        employeeName: "Jane Cooper",
-        designation: "Designer",
-        date: "15/09/24",
-        reason: "Family Emergency",
-        status: "pending",
-        documents: "emergency-letter.pdf",
-        avatar: "/placeholder.svg?height=40&width=40",
-        startDate: "2024-09-15",
-        endDate: "2024-09-17",
-        days: 3,
-      },
-      {
-        id: 3,
-        employeeName: "Arlene McCoy",
-        designation: "Full Time Designer",
-        date: "20/09/24",
-        reason: "Medical Appointment",
-        status: "rejected",
-        documents: "appointment-slip.pdf",
-        avatar: "/placeholder.svg?height=40&width=40",
-        startDate: "2024-09-20",
-        endDate: "2024-09-20",
-        days: 1,
-      },
-    ];
-    setLeavesData(mockLeavesData);
-    setFilteredData(mockLeavesData);
-  }, []);
 
   const handleSearch = (e) => {
     const term = e.target.value;
@@ -196,8 +143,6 @@ const LeavesPage = () => {
     setFilteredData(filtered);
   }, [leavesData, searchTerm, statusFilter]);
 
-  // Filter employees for search
-
   // Handle form input changes
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -206,19 +151,6 @@ const LeavesPage = () => {
       [name]: value,
     }));
     setErrors((prev) => ({ ...prev, [name]: "" }));
-  };
-
-  // Select employee from dropdown
-  const handleEmployeeSelect = (employee) => {
-    console.log("employee", employee);
-    setSelectedEmployee(employee);
-    setEmployeeSearchTerm(employee.name);
-    setFormData((prev) => ({
-      ...prev,
-      employeeName: employee.name,
-      // designation: employee.designation,
-    }));
-    setShowEmployeeDropdown(false);
   };
 
   // Handle file upload
@@ -261,9 +193,10 @@ const LeavesPage = () => {
           "Content-Type": "multipart/form-data",
         },
       });
-
+      console.log("res", res);
       alert("Leave submitted successfully");
       setAddLeaveModalOpen(false);
+      fetchLeaves();
       resetForm();
     } catch (err) {
       console.error("Error submitting leave:", err);
@@ -281,8 +214,6 @@ const LeavesPage = () => {
       documents: null,
     });
     setEmployeeSearchTerm("");
-    setSelectedEmployee(null);
-    setShowEmployeeDropdown(false);
   };
 
   // Handle status change
@@ -324,7 +255,6 @@ const LeavesPage = () => {
     const year = currentDate.getFullYear();
     const month = currentDate.getMonth();
     const firstDay = new Date(year, month, 1);
-    const lastDay = new Date(year, month + 1, 0);
     const startDate = new Date(firstDay);
     startDate.setDate(startDate.getDate() - firstDay.getDay());
 
@@ -486,7 +416,7 @@ const LeavesPage = () => {
             </select>
           </div>
 
-          <div className="search-add-group">
+          {/* <div className="search-add-group">
             <div className="search-input-wrapper" style={{ width: "58%" }}>
               <input
                 type="text"
@@ -497,7 +427,6 @@ const LeavesPage = () => {
               />
               <span className="search-icon">🔍</span>
             </div>
-            {/* {setModalOpen && ( */}
             <button
               style={{ marginBottom: "0px", width: "40%" }}
               className="btn btn-primary"
@@ -507,15 +436,36 @@ const LeavesPage = () => {
             >
               Add Leave
             </button>
-            {/* )} */}
+          </div> */}
+
+          <div className="search-add-group">
+            <div className="search-input-wrapper">
+              <input
+                type="text"
+                placeholder="Search"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="search-input"
+              />
+              <span className="search-icon">🔍</span>
+            </div>
+            <button
+              style={{ marginBottom: "0px" }}
+              className="btn btn-primary"
+              onClick={() => {
+                setAddLeaveModalOpen(true);
+              }}
+            >
+              Add Leave
+            </button>
           </div>
         </div>
 
         <div className="main-content">
           <div className="applied-leaves-section">
-            {/* <div className="section-header">
+            <div className="section-header">
               <h2>Applied Leaves</h2>
-            </div> */}
+            </div>
             <Table columns={columns} data={filteredData} />
           </div>
 

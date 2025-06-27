@@ -24,7 +24,6 @@ const EmployeesPage = () => {
   });
 
   const positions = ["Human Resource", "Designer", "Developer"];
-  const statuses = ["New", "Scheduled", "Ongoing", "Selected", "Rejected"];
   const [errors, setErrors] = useState({});
 
   const handleChange = (e) => {
@@ -81,9 +80,7 @@ const EmployeesPage = () => {
       label: "Delete Candidate",
       icon: "🗑️",
       onClick: (row) => {
-        if (window.confirm(`Are you sure you want to delete ${row.name}?`)) {
-          deleteCandidate(row._id);
-        }
+        deleteCandidate(row);
       },
       className: "danger",
     },
@@ -97,7 +94,7 @@ const EmployeesPage = () => {
       newErrors.email = "Invalid email address";
     }
     if (!formData.phone.trim()) newErrors.phone = "Phone number is required";
-    if (!formData.department.trim())
+    if (!formData.department?.trim())
       newErrors.department = "Department is required";
     if (!formData.position) newErrors.position = "Position is required";
     if (!formData.dateOfJoining)
@@ -110,14 +107,18 @@ const EmployeesPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validate()) return;
-    console.log("Submitting", formData);
     let id = selectedEmployee._id;
-    // Submit data
     try {
       const res = await Api.put(`/candidates/${id}`, formData);
-      console.log("res", res);
-      alert("Candidate updated");
-      fetchCandidates(); // Refresh list
+      
+      setFinalDate((prevData) => {
+        const updated = prevData.map((item) =>
+          item._id === id ? { ...item, ...res.data.data } : item
+        );
+        console.log("Updated finalDate:", updated);
+        return updated;
+      });
+      alert(res?.data?.message);
     } catch (err) {
       console.error("Update error:", err);
       alert("Update failed");
@@ -158,12 +159,12 @@ const EmployeesPage = () => {
     setFinalDate(formatted);
   };
 
-  const deleteCandidate = async (id) => {
+  const deleteCandidate = async (row) => {
     try {
-      await Api.delete(`/candidates/${id}`);
-      alert("Candidate deleted successfully");
-      // Optionally refresh data:
-      fetchCandidates();
+      const res = await Api.delete(`/candidates/${row._id}`);
+      
+      alert(res.data.message);
+      setCandidatesData((prev) => prev.filter((item) => item._id !== row._id));
     } catch (error) {
       console.error("Delete error:", error);
       alert("Failed to delete candidate");
@@ -175,9 +176,7 @@ const EmployeesPage = () => {
       <div className="employees-content">
         <Header
           setCandidatesData={setCandidatesData}
-          setModalOpen={setModalOpen}
           positions={positions}
-          statuses={statuses}
         />
 
         <Table columns={columns} data={finalDate} actions={actions} />
@@ -247,7 +246,7 @@ const EmployeesPage = () => {
                   required
                 >
                   <option value="">Select Position</option>
-                  <option value="HumanResource">Human Resource</option>
+                  <option value="Human Resource">Human Resource</option>
                   <option value="Designer">Designer</option>
                   <option value="Developer">Developer</option>
                 </select>

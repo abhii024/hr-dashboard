@@ -11,6 +11,8 @@ router.post("/register", AuthController.register);
 router.post("/login", AuthController.login);
 // router.post("/candidates", upload.single("resume"), CandidateController.create);
 router.get("/candidates", authMiddleware, CandidateController.getCandidateData);
+router.put("/candidates/:id/status", authMiddleware, CandidateController.updateStatus);
+router.delete("/candidates/:id", CandidateController.deleteCandidate);
 router.delete(
   "/candidates/:id",
   authMiddleware,

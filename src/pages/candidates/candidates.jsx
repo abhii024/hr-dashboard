@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useRef, useState, useEffect } from "react";
 import "./Candidates.css";
 import Table from "../../components/ui/Table";
 import Badge from "../../components/ui/Badge";
@@ -10,6 +10,7 @@ import Button from "../../components/ui/Button";
 import Api from "../../api.js";
 import Header from "../../components/ui/Header.jsx";
 const Candidates = () => {
+  const headerRef = useRef();
   const [modalOpen, setModalOpen] = useState(false);
   const [candidatesData, setCandidatesData] = useState([]);
   const [finalDate, setFinalDate] = useState([]);
@@ -25,16 +26,46 @@ const Candidates = () => {
     {
       key: "status",
       header: "Status",
-      render: (value) => {
-        const variant =
-          value === "new"
-            ? "info"
-            : value === "selected"
-            ? "success"
-            : "danger";
-        return <Badge variant={variant}>{value}</Badge>;
-      },
+      render: (value, row) => (
+        <div className="status-cell">
+          <div className="status-dropdown">
+            <Badge
+              variant={
+                value.toLowerCase() === "new"
+                  ? "info"
+                  : value.toLowerCase() === "selected"
+                  ? "success"
+                  : value.toLowerCase() === "rejected"
+                  ? "danger"
+                  : "default"
+              }
+              className="status-badge"
+            >
+              {value}
+              <span className="dropdown-arrow">▼</span>
+            </Badge>
+
+            <div className="status-dropdown-menu">
+              {statuses.map((statusOption) => (
+                <button
+                  key={statusOption}
+                  className={`status-option ${
+                    value === statusOption ? "active" : ""
+                  }`}
+                  onClick={() => handleCandidateStatusChange(row, statusOption)}
+                >
+                  <span
+                    className={`status-indicator ${statusOption.toLowerCase()}`}
+                  ></span>
+                  {statusOption}
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+      ),
     },
+
     { key: "experience", header: "Experience" },
   ];
 
@@ -62,10 +93,7 @@ const Candidates = () => {
       label: "Delete Candidate",
       icon: "🗑️",
       onClick: (row) => {
-        if (window.confirm(`Are you sure you want to delete ${row.name}?`)) {
-          alert(`Deleted ${row.name}`);
-          // Optionally: call DELETE API here
-        }
+        deleteCandidate(row);
       },
       className: "danger",
     },
@@ -112,6 +140,26 @@ const Candidates = () => {
     return Object.keys(newErrors).length === 0;
   };
 
+  const handleCandidateStatusChange = async (candidate, newStatus) => {
+    try {
+      await Api.put(`/candidates/${candidate._id}`, {
+        status: newStatus,
+      });
+      const updatedData = finalDate.map((item) =>
+        item._id === candidate._id
+          ? { ...item, status: newStatus.toLowerCase() }
+          : item
+      );
+
+      setFinalDate(updatedData);
+      alert(`Status updated to ${newStatus}`);
+      // fetchCandidates(); // or manually update local state
+    } catch (err) {
+      console.error("Error updating status:", err);
+      alert(`error: Status update`);
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validate()) return;
@@ -126,7 +174,7 @@ const Candidates = () => {
     data.append("resume", formData.resume);
 
     try {
-      const res = Api.post("/candidates", formData, {
+      const res = await Api.post("/candidates", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
       setModalOpen(false);
@@ -137,12 +185,14 @@ const Candidates = () => {
         position: "",
         experience: "",
         resume: null,
-        message: res.data.message || "Candidate created!",
       });
-
-      setModalOpen(false);
+      if (headerRef.current?.fetchCandidates) {
+        await headerRef.current.fetchCandidates();
+      }
+      alert(res?.data?.message);
     } catch (err) {
       console.log(err.response?.data?.message || "Upload failed");
+      alert(err?.response?.data?.message);
     }
   };
 
@@ -161,14 +211,27 @@ const Candidates = () => {
     setFinalDate(formatted);
   }, [candidatesData]);
 
+  const deleteCandidate = async (row) => {
+    try {
+      const res = await Api.delete(`/candidates/${row._id}`); // ✅ static async backend method call
+      alert(`${row.name} deleted successfully`);
+      setCandidatesData((prev) => prev.filter((item) => item._id !== row._id));
+      alert(res?.data?.message);
+    } catch (err) {
+      console.error("❌ Delete failed:", err);
+      alert("Failed to delete candidate");
+    }
+  };
+
   return (
     <div className="candidates-page">
       <div className="content-container">
         <Header
+          ref={headerRef}
           setCandidatesData={setCandidatesData}
           setModalOpen={setModalOpen}
           positions={positions}
-          statuses= {statuses}
+          statuses={statuses}
         />
         <Table columns={columns} data={finalDate} actions={actions} />
       </div>

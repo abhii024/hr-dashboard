@@ -202,13 +202,13 @@
   position: relative;
 }
 
-.password-input input {
+/* .password-input input {
   padding-right: 48px;
-}
+} */
 
 .toggle-password {
   position: absolute;
-  right: 12px;
+  right: -7%;
   top: 50%;
   transform: translateY(-50%);
   background: none;

@@ -158,15 +158,7 @@
   position: relative;
 }
 
-.search-input {
-  width: 100%;
-  padding: 10px 36px 10px 12px;
-  border: 1.5px solid #a855f7; /* Purple */
-  border-radius: 10px;
-  font-size: 14px;
-  outline: none;
-  transition: border-color 0.3s;
-}
+
 
 .search-input:focus {
   border-color: #7c3aed; /* Darker purple on focus */
@@ -285,7 +277,19 @@
 }
 
 .leave-date {
-  font-size: 13.5px;
+  font-size: 10px;
   color: #111;
   white-space: nowrap;
+}
+
+
+.applied-leaves-section {
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+}
+.section-header {
+   background: linear-gradient(135deg, #7c3aed 0%, #a855f7 100%);
+  color: white;
+  padding: 1px 24px;
 }

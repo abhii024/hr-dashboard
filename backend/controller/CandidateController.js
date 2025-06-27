@@ -111,6 +111,36 @@ class CandidateController {
       res.status(500).json({ message: "Server error", error });
     }
   }
+
+   static async updateStatus(req, res) {
+    const { id } = req.params;
+    const { status } = req.body;
+
+    const validStatuses = ["New", "Scheduled", "Ongoing", "Selected", "Rejected"];
+    if (!validStatuses.includes(status)) {
+      return res.status(400).json({ message: "Invalid status value" });
+    }
+
+    try {
+      const updatedCandidate = await Candidate.findByIdAndUpdate(
+        id,
+        { status },
+        { new: true }
+      );
+
+      if (!updatedCandidate) {
+        return res.status(404).json({ message: "Candidate not found" });
+      }
+
+      res.status(200).json({
+        message: "Candidate status updated successfully",
+        candidate: updatedCandidate,
+      });
+    } catch (error) {
+      console.error("Error updating candidate status:", error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  }
 }
 
 export default CandidateController;

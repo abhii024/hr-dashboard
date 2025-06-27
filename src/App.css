@@ -2,7 +2,7 @@
   background: linear-gradient(135deg, #7c3aed 0%, #a855f7 100%);
   color: white;
   border: none;
-  padding: 14px 24px;
+  padding: 10px 24px;
   border-radius: 8px;
   font-size: 14px;
   font-weight: 600;
@@ -82,7 +82,7 @@
   border: 2px solid #e5e7eb;
   border-radius: 8px;
   font-size: 14px;
-  width: 100%;
+  /* width: 100%; */
   font-family: inherit;
 }
 

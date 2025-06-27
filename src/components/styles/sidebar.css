@@ -165,3 +165,63 @@
     width: 260px;
   }
 }
+
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.logout-modal {
+  background: #fff;
+  border-radius: 10px;
+  width: 420px;
+  padding: 0;
+  overflow: hidden;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+}
+
+.modal-header {
+  background-color: #4b0082;
+  color: white;
+  text-align: center;
+  padding: 14px 0;
+  font-weight: bold;
+  font-size: 18px;
+}
+
+.modal-body {
+  padding: 20px;
+  text-align: center;
+}
+
+.modal-buttons {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+
+.cancel-btn {
+  background-color: #4b0082;
+  color: white;
+  padding: 8px 20px;
+  border-radius: 20px;
+  border: none;
+  cursor: pointer;
+}
+
+.modal-logout-btn {
+  background-color: transparent;
+  color: red;
+  padding: 8px 20px;
+  border-radius: 20px;
+  border: 1px solid red;
+  cursor: pointer;
+}
+
